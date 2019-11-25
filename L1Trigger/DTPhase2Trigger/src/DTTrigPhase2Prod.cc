@@ -393,7 +393,7 @@ void DTTrigPhase2Prod::produce(Event & iEvent, const EventSetup& iEventSetup){
 	  if(inner((*metaPrimitiveIt))) sl=1;
 	  else sl=3;
       }
-	  
+
       if(p2_df==2){
           if(debug)std::cout<<"pushing back phase-2 dataformat carlo-federica dataformat"<<std::endl;
           outP2Ph.push_back(L1Phase2MuDTPhDigi((int)round((*metaPrimitiveIt).t0/25.)-shift_back,   // ubx (m_bx) //bx en la orbita
@@ -438,16 +438,17 @@ void DTTrigPhase2Prod::endRun(edm::Run const& iRun, const edm::EventSetup& iEven
 };
 
 
+
 bool DTTrigPhase2Prod::outer(metaPrimitive mp){
-    if(mp.wi1==-1 and mp.wi2==-1 and mp.wi3==-1 and mp.wi4==-1)
-	return true;
-    return false;
+    int counter = (mp.wi5!=-1)+(mp.wi6!=-1)+(mp.wi7!=-1)+(mp.wi8!=-1);
+    if (counter > 2) return true;
+    else return false;
 }
 
 bool DTTrigPhase2Prod::inner(metaPrimitive mp){
-    if(mp.wi5==-1 and mp.wi6==-1 and mp.wi7==-1 and mp.wi8==-1)
-        return true;
-    return false;
+    int counter = (mp.wi1!=-1)+(mp.wi2!=-1)+(mp.wi3!=-1)+(mp.wi4!=-1);
+    if (counter > 2) return true;
+    else return false;
 }
 
 bool DTTrigPhase2Prod::hasPosRF(int wh,int sec){
