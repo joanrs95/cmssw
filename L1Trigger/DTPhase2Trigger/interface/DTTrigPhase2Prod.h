@@ -138,6 +138,7 @@ void endRun(edm::Run const& iRun, const edm::EventSetup& iEventSetup) override;
     bool useRPC;
 
     void assignIndex(std::vector<metaPrimitive> &inMPaths);
+    void assignIndexPerBX(std::vector<metaPrimitive> &inMPaths);
     int assignQualityOrder(metaPrimitive mP);
 };
 
