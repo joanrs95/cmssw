@@ -382,7 +382,7 @@ void DTTrigPhase2Prod::produce(Event & iEvent, const EventSetup& iEventSetup){
 
     for (auto metaPrimitiveIt = correlatedMetaPrimitives.begin(); metaPrimitiveIt != correlatedMetaPrimitives.end(); ++metaPrimitiveIt){
       DTChamberId chId((*metaPrimitiveIt).rawId);
-      if(debug) std::cout<<"looping in final vector: SuperLayerId"<<chId<<" x="<<(*metaPrimitiveIt).x<<" quality="<<(*metaPrimitiveIt).quality << " chi2="<< (*metaPrimitiveIt).chi2 << " index=" << (*metaPrimitiveIt).index <<std::endl;
+      if(debug) std::cout<<"looping in final vector: SuperLayerId"<<chId<<" x="<<(*metaPrimitiveIt).x<<" quality="<<(*metaPrimitiveIt).quality << " BX="<< round((*metaPrimitiveIt).t0 / 25.) << " index=" << (*metaPrimitiveIt).index <<std::endl;
       
       int sectorTP=chId.sector();
       if(sectorTP==13) sectorTP=4;
@@ -513,7 +513,24 @@ int DTTrigPhase2Prod::rango(metaPrimitive mp) {
     return mp.quality;
 }
 
+
+
 void  DTTrigPhase2Prod::assignIndex(std::vector<metaPrimitive> &inMPaths)
+{
+    std::map <int, std::vector<metaPrimitive> >  primsPerBX; 
+    for (auto & metaPrimitive : inMPaths){
+      int BX = round(metaPrimitive.t0 / 25.);
+      primsPerBX[BX].push_back(metaPrimitive);
+    } 
+    inMPaths.clear();
+    for (auto & prims : primsPerBX) {
+      assignIndexPerBX (prims.second);
+      for (auto & primitive : prims.second ) inMPaths.push_back(primitive);
+    }
+
+
+}
+void  DTTrigPhase2Prod::assignIndexPerBX(std::vector<metaPrimitive> &inMPaths)
 {
     // First we asociate a new index to the metaprimitive depending on quality or phiB; 
     uint32_t rawId = -1; 
